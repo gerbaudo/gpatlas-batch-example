@@ -39,6 +39,7 @@ def main():
     batchdir = 'batch/fill_trees'
     outdir = 'out'
     logdir = 'log'
+    if not os.path.exists(batchdir) : os.makedirs(batchdir)
     if not os.path.exists(outdir) : os.makedirs(outdir)
     if not os.path.exists(logdir) : os.makedirs(logdir)
 
@@ -55,10 +56,10 @@ def main():
               % \
               {'jobname':jobId, 'outlog':outlog, 'scripname':outscript}
         print cmd
-    if submit :
-        out = getCommandOutput(cmd)
-        if verbose : print out['stdout']
-    else : print "This was a dry run; use '--submit' to actually submit the jobs"
+        if submit :
+            out = getCommandOutput(cmd)
+            if verbose : print out['stdout']
+    if not submit : print "This was a dry run; use '--submit' to actually submit the jobs"
 
 #___________________________________________________________
 
@@ -84,7 +85,8 @@ def fillTemplate(template, jobId, filelist, outscript):
     base_dir = os.getcwd()
     dest_dir = base_dir+'/out'
     out_file = jobId+'.root'
-    scratch_dir = '/scratch/asoffa/'+jobId # local scratch on the cluser node
+    username = os.getlogin()
+    scratch_dir = '/scratch/'+username+'/'+jobId # local scratch on the cluser node
     if not os.path.exists(dest_dir) : os.makedirs(dest_dir)
     for line in open(template).readlines() :
         line = line.replace('${job_number}', jobId)
