@@ -11,6 +11,7 @@ import optparse
 import os
 import re
 import subprocess
+import sys
 
 
 usage="""
@@ -45,6 +46,8 @@ def main():
     if not os.path.exists(logdir) : os.makedirs(logdir)
 
     inputLists = glob.glob('filelists/*.txt')
+    if not inputLists:
+        sys.exit('empty filelists. Please generate them beforehand (run with -h)')
     for jobId, inputList in zip(extractJobIndices(inputLists), inputLists):
         outscript = batchdir+'/'+"job_%s.sh"%jobId
         outlog = logdir+'/'+"job_%s.log"%jobId
