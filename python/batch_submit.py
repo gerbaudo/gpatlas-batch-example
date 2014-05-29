@@ -35,6 +35,7 @@ def main():
     submit       = options.submit
     verbose      = options.verbose
 
+    if not checkPwd() : parser.error('\n\tcd to to the top-level dir; you should run as ./python/batch_submit.py')
     template = 'batch/templates/fill_trees.sh'
     batchdir = 'batch/fill_trees'
     outdir = 'out'
@@ -98,6 +99,10 @@ def fillTemplate(template, jobId, filelist, outscript):
         outFile.write(line)
     outFile.close()
 
+def checkPwd():
+    actualPwd = os.getcwd()
+    expectedPwd = os.path.abspath(os.path.dirname(os.path.realpath(__file__))+'/..')
+    return actualPwd==expectedPwd
 
 #___________________________________________________________
 
